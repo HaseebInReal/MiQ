@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_374ab15d21194052c00eccade251a37d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+<div style="
+    position: fixed; 
+    bottom: 30px; left: 30px; width: 220px; z-index:9999; 
+    background-color: white;
+    border:2px solid grey;
+    border-radius:10px;
+    padding: 10px;
+    font-size:14px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+">
+<b>🗺️ Map Key</b><br><br>
+<i class="fa fa-map-marker fa-2x" style="color:red; margin-right:6px;"></i> Office<br>
+<img src="https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg" style="width:16px; height:16px; vertical-align:middle; margin-right:6px;"> Restaurant<br>
+<img src="https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg" style="width:16px; height:16px; vertical-align:middle; margin-right:6px;"> Park<br>
+<img src="https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg" style="width:16px; height:16px; vertical-align:middle; margin-right:6px;"> Pub<br>
+<img src="https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg" style="width:16px; height:16px; vertical-align:middle; margin-right:6px;"> Underground Station<br>
+<img src="https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg" style="width:16px; height:16px; vertical-align:middle; margin-right:6px;"> National Rail Station
+</div>
+    
+<div id="travel-panel" style="
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 300px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    z-index: 9999;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    font-family: Arial, sans-serif;
+">
+  <h4>🚶 Travel Time Calculator</h4>
+
+  <label for="origin">Start:</label><br>
+  <select id="origin" style="width: 100%; margin-bottom: 10px;">
+    <option value="">-- Select origin --</option>
+    <optgroup label="Offices">
+      <option value="[51.51847, -0.11497]">MiQ HQ</option>
+      <option value="[51.5176 , -0.0837]">1 Liverpool Street</option>
+      <option value="[51.5143 , -0.0864]">60 Threadneedle Street</option>
+      <option value="[51.5163 , -0.0903]">1 Basinghall Avenue</option>
+      <option value="[51.5175 , -0.0937]">Mode, 125 London Wall</option>
+      <option value="[51.5235 , -0.1140]">200 Gray's Inn Road</option>
+      <option value="[51.5136 , -0.1156]">Aldwych House, 71-91 Aldwych</option>
+    </optgroup>
+    <optgroup label="Clients">
+      <option value="[51.5248, -0.1427]">dentsu</option>
+      <option value="[51.5085 , -0.1062]">WPP</option>
+      <option value="[51.5342  , -0.1249]">Havas</option>
+      <option value="[51.5107 , -0.2257]">Publicis</option>
+      <option value="[51.5207  , -0.1338]">Omnicom</option>
+      <option value="[51.5162  , -0.1024]">IPG</option>
+    </optgroup>
+    <optgroup label="Stations">
+  <option value="[51.5178, -0.0824]">Liverpool Street Station</option>
+  <option value="[51.5185, -0.0890]">Moorgate Station</option>
+  <option value="[51.5133, -0.0890]">Bank Station</option>
+  <option value="[51.5180, -0.1110]">Chancery Lane Station</option>
+  <option value="[51.5172, -0.1195]">Holborn Station</option>
+  <option value="[51.5205, -0.1052]">Farringdon Station</option>
+  <option value="[51.5204, -0.0977]">Barbican Station</option>
+  <option value="[51.5308, -0.1238]">Kings Cross Station</option>
+  <option value="[51.5036, -0.1049]">Southwark Station</option>
+  <option value="[51.5101, -0.0860]">Monument Station</option>
+  <option value="[51.5107, -0.1134]">Temple Station</option>
+  <option value="[51.5113, -0.1043]">Blackfriars Station</option>
+  <option value="[51.5125, -0.0945]">Mansion House Station</option>
+  <option value="[51.5102, -0.0906]">Cannon Street Station</option>
+  <option value="[51.5146, -0.0970]">St Paul's Station</option>
+  <option value="[51.5055, -0.0865]">London Bridge Station</option>
+  <option value="[51.5142, -0.1033]">City Thameslink Station</option>
+</optgroup>
+
+  </select>
+
+  <label for="destination">End:</label><br>
+  <select id="destination" style="width: 100%; margin-bottom: 10px;">
+    <option value="">-- Select destination --</option>
+    <optgroup label="Offices">
+      <option value="[51.51847, -0.11497]">MiQ HQ</option>
+      <option value="[51.5176 , -0.0837]">1 Liverpool Street</option>
+      <option value="[51.5143 , -0.0864]">60 Threadneedle Street</option>
+      <option value="[51.5163 , -0.0903]">1 Basinghall Avenue</option>
+      <option value="[51.5175 , -0.0937]">Mode, 125 London Wall</option>
+      <option value="[51.5235 , -0.1140]">200 Gray's Inn Road</option>
+      <option value="[51.5136 , -0.1156]">Aldwych House, 71-91 Aldwych</option>
+    </optgroup>
+    <optgroup label="Clients">
+      <option value="[51.5248, -0.1427]">dentsu</option>
+      <option value="[51.5085 , -0.1062]">WPP</option>
+      <option value="[51.5342  , -0.1249]">Havas</option>
+      <option value="[51.5107 , -0.2257]">Publicis</option>
+      <option value="[51.5207  , -0.1338]">Omnicom</option>
+      <option value="[51.5162  , -0.1024]">IPG</option>
+    </optgroup>
+    <optgroup label="Stations">
+  <option value="[51.5178, -0.0824]">Liverpool Street Station</option>
+  <option value="[51.5185, -0.0890]">Moorgate Station</option>
+  <option value="[51.5133, -0.0890]">Bank Station</option>
+  <option value="[51.5180, -0.1110]">Chancery Lane Station</option>
+  <option value="[51.5172, -0.1195]">Holborn Station</option>
+  <option value="[51.5205, -0.1052]">Farringdon Station</option>
+  <option value="[51.5204, -0.0977]">Barbican Station</option>
+  <option value="[51.5308, -0.1238]">Kings Cross Station</option>
+  <option value="[51.5036, -0.1049]">Southwark Station</option>
+  <option value="[51.5101, -0.0860]">Monument Station</option>
+  <option value="[51.5107, -0.1134]">Temple Station</option>
+  <option value="[51.5113, -0.1043]">Blackfriars Station</option>
+  <option value="[51.5125, -0.0945]">Mansion House Station</option>
+  <option value="[51.5102, -0.0906]">Cannon Street Station</option>
+  <option value="[51.5146, -0.0970]">St Paul's Station</option>
+  <option value="[51.5055, -0.0865]">London Bridge Station</option>
+  <option value="[51.5142, -0.1033]">City Thameslink Station</option>
+</optgroup>
+
+  </select>
+
+  <button onclick="calculateRoute()" style="width:100%; padding:5px; background-color:#00A380; color:white; border:none; border-radius:5px;">Calculate</button>
+  <div id="route-info" style="margin-top:10px;"></div>
+</div>
+
+<script>
+function toRad(x) {
+  return x * Math.PI / 180;
+}
+
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function calculateRoute() {
+  const origin = JSON.parse(document.getElementById("origin").value || "null");
+  const destination = JSON.parse(document.getElementById("destination").value || "null");
+  const infoDiv = document.getElementById("route-info");
+  infoDiv.innerHTML = "";
+
+  if (!origin || !destination) {
+    infoDiv.innerHTML = "<span style='color:red;'>Please select both start and end locations.</span>";
+    return;
+  }
+
+  const distanceKm = haversineDistance(origin[0], origin[1], destination[0], destination[1]);
+  const walkingSpeedKph = 5;
+  const timeMins = Math.round((distanceKm / walkingSpeedKph) * 60);
+
+  infoDiv.innerHTML = `<b>Estimated Travel Time:</b><br>🚶 ${timeMins} min (${distanceKm.toFixed(2)} km)`;
+}
+</script>
+    
+            <div class="folium-map" id="map_374ab15d21194052c00eccade251a37d" ></div>
+        
+    
+<div style="
+    position: fixed; 
+    top: 50%; left: 50%; 
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: auto;
+    z-index: 999;
+    opacity: 0.12;  /* Adjust this for transparency */
+    pointer-events: none;  /* Allows clicking through to map */
+">
+  <img src="https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Logo%20InReal%20Black.svg" 
+       style="width: 100%; height: auto; object-fit: contain;" />
+</div>
+</body>
+<script>
+    
+    
+            var map_374ab15d21194052c00eccade251a37d = L.map(
+                "map_374ab15d21194052c00eccade251a37d",
+                {
+                    center: [51.515, -0.1],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_44cd8551651980684b05a3bab9733b19 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_44cd8551651980684b05a3bab9733b19.addTo(map_374ab15d21194052c00eccade251a37d);
+        
+    
+            var marker_938df4c0a3c88c409b1b16960f6e10fc = L.marker(
+                [51.51847, -0.11497],
+                {
+}
+            ).addTo(map_374ab15d21194052c00eccade251a37d);
+        
+    
+        var custom_icon_0b065826f72585aed956c37bc23caa13 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/MiQ%20Digital_id4jIxrUZl_1.svg",
+  "iconSize": [60, 60],
+  "iconAnchor": [30, 30],
+});
+        marker_938df4c0a3c88c409b1b16960f6e10fc.setIcon(custom_icon_0b065826f72585aed956c37bc23caa13);
+        
+    
+        var popup_225c9f84184d65181ac713fab6f453de = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7682ff9c4da4c57cff7447c0b3f3a9cb = $(`<div id="html_7682ff9c4da4c57cff7447c0b3f3a9cb" style="width: 100.0%; height: 100.0%;">MiQ Digital HQ</div>`)[0];
+                popup_225c9f84184d65181ac713fab6f453de.setContent(html_7682ff9c4da4c57cff7447c0b3f3a9cb);
+            
+        
+
+        marker_938df4c0a3c88c409b1b16960f6e10fc.bindPopup(popup_225c9f84184d65181ac713fab6f453de)
+        ;
+
+        
+    
+    
+                marker_938df4c0a3c88c409b1b16960f6e10fc.setIcon(custom_icon_0b065826f72585aed956c37bc23caa13);
+            
+    
+            var feature_group_394dc3fb81b066de1add42f00a934a97 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_5454b82f7f961319eebbdd49be389448 = L.marker(
+                [51.5248, -0.1427],
+                {
+}
+            ).addTo(feature_group_394dc3fb81b066de1add42f00a934a97);
+        
+    
+            var div_icon_8cedeadbe92f66b96ea63bbbd492dccd = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:70px; height:70px; display:flex; align-items:center; justify-content:center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Dentsu-logo_black.svg\" style=\"width:60px; height:60px; object-fit:contain; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_5454b82f7f961319eebbdd49be389448.setIcon(div_icon_8cedeadbe92f66b96ea63bbbd492dccd);
+        
+    
+                marker_5454b82f7f961319eebbdd49be389448.setIcon(div_icon_8cedeadbe92f66b96ea63bbbd492dccd);
+            
+    
+            var marker_968c074a96c8af7d5abd121582c894bc = L.marker(
+                [51.5085, -0.1062],
+                {
+}
+            ).addTo(feature_group_394dc3fb81b066de1add42f00a934a97);
+        
+    
+            var div_icon_6c077552e69a1350ca9feda15c78093a = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:70px; height:70px; display:flex; align-items:center; justify-content:center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/WPP_2020_logo.svg\" style=\"width:60px; height:60px; object-fit:contain; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_968c074a96c8af7d5abd121582c894bc.setIcon(div_icon_6c077552e69a1350ca9feda15c78093a);
+        
+    
+                marker_968c074a96c8af7d5abd121582c894bc.setIcon(div_icon_6c077552e69a1350ca9feda15c78093a);
+            
+    
+            var marker_16e424dff4fe62d5abec5121782f96e5 = L.marker(
+                [51.5342, -0.1249],
+                {
+}
+            ).addTo(feature_group_394dc3fb81b066de1add42f00a934a97);
+        
+    
+            var div_icon_4399967c0a0da54563e287c45e7e59a4 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:70px; height:70px; display:flex; align-items:center; justify-content:center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/HAVAS_LOGO_2023.svg\" style=\"width:60px; height:60px; object-fit:contain; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_16e424dff4fe62d5abec5121782f96e5.setIcon(div_icon_4399967c0a0da54563e287c45e7e59a4);
+        
+    
+                marker_16e424dff4fe62d5abec5121782f96e5.setIcon(div_icon_4399967c0a0da54563e287c45e7e59a4);
+            
+    
+            var marker_de8b6c9a70ca464670fd45d696c5cae6 = L.marker(
+                [51.5107, -0.2257],
+                {
+}
+            ).addTo(feature_group_394dc3fb81b066de1add42f00a934a97);
+        
+    
+            var div_icon_271f69782c086efab078956796cb3e93 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:50px; height:50px; display:flex; align-items:center; justify-content:center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/publicis-groupe-vector-logo.svg\" style=\"width:40px; height:40px; object-fit:contain; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_de8b6c9a70ca464670fd45d696c5cae6.setIcon(div_icon_271f69782c086efab078956796cb3e93);
+        
+    
+                marker_de8b6c9a70ca464670fd45d696c5cae6.setIcon(div_icon_271f69782c086efab078956796cb3e93);
+            
+    
+            var marker_8d73f8b3d658e621258b3795e819281b = L.marker(
+                [51.5207, -0.1338],
+                {
+}
+            ).addTo(feature_group_394dc3fb81b066de1add42f00a934a97);
+        
+    
+            var div_icon_0473f0cdf9e1881340b6af345404d14e = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:70px; height:70px; display:flex; align-items:center; justify-content:center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/omg_solo-black.svg\" style=\"width:60px; height:60px; object-fit:contain; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_8d73f8b3d658e621258b3795e819281b.setIcon(div_icon_0473f0cdf9e1881340b6af345404d14e);
+        
+    
+                marker_8d73f8b3d658e621258b3795e819281b.setIcon(div_icon_0473f0cdf9e1881340b6af345404d14e);
+            
+    
+            var marker_51089ce3c3b7129d84bbb7469ab5ab80 = L.marker(
+                [51.5162, -0.1024],
+                {
+}
+            ).addTo(feature_group_394dc3fb81b066de1add42f00a934a97);
+        
+    
+            var div_icon_34b38d8f4bc5fe2414a6f0fdad817142 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:95px; height:95px; display:flex; align-items:center; justify-content:center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/ipg-mediabrands-seeklogo.svg\" style=\"width:85px; height:85px; object-fit:contain; filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.6));\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_51089ce3c3b7129d84bbb7469ab5ab80.setIcon(div_icon_34b38d8f4bc5fe2414a6f0fdad817142);
+        
+    
+                marker_51089ce3c3b7129d84bbb7469ab5ab80.setIcon(div_icon_34b38d8f4bc5fe2414a6f0fdad817142);
+            
+    
+            feature_group_394dc3fb81b066de1add42f00a934a97.addTo(map_374ab15d21194052c00eccade251a37d);
+        
+    
+            var feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_d9f0e5bce03385e9bde435786f0a0f32 = L.marker(
+                [51.5176, -0.0837],
+                {
+}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var icon_984f4f27a3cca9b9681f018e531a7ebe = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6a278c1daaa59d9815218da6dcafc1c3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3c8010a76c4f329bf28f504662d413ef = $(`<div id="html_3c8010a76c4f329bf28f504662d413ef" style="width: 100.0%; height: 100.0%;">         <div>             <b>1 Liverpool Street</b><br>             <a href="https://25605544.fs1.hubspotusercontent-eu1.net/hubfs/25605544/1-liverpool-st-ec2.client.brochure.pdf.pdf" target="_blank">Click here to view the brochure</a>         </div>         </div>`)[0];
+                popup_6a278c1daaa59d9815218da6dcafc1c3.setContent(html_3c8010a76c4f329bf28f504662d413ef);
+            
+        
+
+        marker_d9f0e5bce03385e9bde435786f0a0f32.bindPopup(popup_6a278c1daaa59d9815218da6dcafc1c3)
+        ;
+
+        
+    
+    
+                marker_d9f0e5bce03385e9bde435786f0a0f32.setIcon(icon_984f4f27a3cca9b9681f018e531a7ebe);
+            
+    
+            var circle_4959aa825911402b3b07ae6bdf80719b = L.circle(
+                [51.5176, -0.0837],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 150, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var marker_cd9a599d0253ff3206f409015cddd1d8 = L.marker(
+                [51.5143, -0.0864],
+                {
+}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var icon_c58ed9c8fc6b98186f93dbd6f8077e38 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d52ba1b81e8452e3a7f32fe60cc5a2da = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0654bf53f712881ac36b63af7a23849b = $(`<div id="html_0654bf53f712881ac36b63af7a23849b" style="width: 100.0%; height: 100.0%;">         <div>             <b>60 Threadneedle Street</b><br>             <a href="https://25605544.fs1.hubspotusercontent-eu1.net/hubfs/25605544/60-threadneedle-brochure-client.brochure.pdf.pdf" target="_blank">Click here to view the brochure</a>         </div>         </div>`)[0];
+                popup_d52ba1b81e8452e3a7f32fe60cc5a2da.setContent(html_0654bf53f712881ac36b63af7a23849b);
+            
+        
+
+        marker_cd9a599d0253ff3206f409015cddd1d8.bindPopup(popup_d52ba1b81e8452e3a7f32fe60cc5a2da)
+        ;
+
+        
+    
+    
+                marker_cd9a599d0253ff3206f409015cddd1d8.setIcon(icon_c58ed9c8fc6b98186f93dbd6f8077e38);
+            
+    
+            var circle_6f70f3a533b4ad9b2b0ac453ea38f1b1 = L.circle(
+                [51.5143, -0.0864],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 150, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var marker_a17fd9e2829deccaf24de265f7b042bf = L.marker(
+                [51.5163, -0.0903],
+                {
+}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var icon_40455e46b67367b3ee1897f1fe7205a9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a637b4f1aeb064133c15c417c0ccc192 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4bc1c7401db9805fa526d3b9a6b59ea6 = $(`<div id="html_4bc1c7401db9805fa526d3b9a6b59ea6" style="width: 100.0%; height: 100.0%;">         <div>             <b>1 Basinghall Avenue</b><br>             <a href="https://25605544.fs1.hubspotusercontent-eu1.net/hubfs/25605544/One%20Basinghall%20Avenue%2c%201%20Basinghall%20Avenue.client.brochure.pdf.pdf" target="_blank">Click here to view the brochure</a>         </div>         </div>`)[0];
+                popup_a637b4f1aeb064133c15c417c0ccc192.setContent(html_4bc1c7401db9805fa526d3b9a6b59ea6);
+            
+        
+
+        marker_a17fd9e2829deccaf24de265f7b042bf.bindPopup(popup_a637b4f1aeb064133c15c417c0ccc192)
+        ;
+
+        
+    
+    
+                marker_a17fd9e2829deccaf24de265f7b042bf.setIcon(icon_40455e46b67367b3ee1897f1fe7205a9);
+            
+    
+            var circle_1acb45b8f816c3ad99d8c5313df2f7a6 = L.circle(
+                [51.5163, -0.0903],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 150, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var marker_082e59b6db0d6dfe799f3c53b7e12876 = L.marker(
+                [51.5175, -0.0937],
+                {
+}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var icon_27f7e94318fde74322ccfc3175137132 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_df4b9983217ad7b4821187f890e085f7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_123ae77c0cbf6e8301977957bb1636b8 = $(`<div id="html_123ae77c0cbf6e8301977957bb1636b8" style="width: 100.0%; height: 100.0%;">         <div>             <b>Mode, 125 London Wall</b><br>             <a href="https://25605544.fs1.hubspotusercontent-eu1.net/hubfs/25605544/Mode%2c%20125%20London%20Wall.client.brochure.pdf.pdf" target="_blank">Click here to view the brochure</a>         </div>         </div>`)[0];
+                popup_df4b9983217ad7b4821187f890e085f7.setContent(html_123ae77c0cbf6e8301977957bb1636b8);
+            
+        
+
+        marker_082e59b6db0d6dfe799f3c53b7e12876.bindPopup(popup_df4b9983217ad7b4821187f890e085f7)
+        ;
+
+        
+    
+    
+                marker_082e59b6db0d6dfe799f3c53b7e12876.setIcon(icon_27f7e94318fde74322ccfc3175137132);
+            
+    
+            var circle_993c11fe420e79f3de5648ade16764e1 = L.circle(
+                [51.5175, -0.0937],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 150, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var marker_0a7dca3fe5ebae810f9b39fd0a1af56a = L.marker(
+                [51.5235, -0.1141],
+                {
+}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var icon_a4cc077f22d13d7cfa1ffc886e47e570 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fadea25b980ccbf62f352de378255017 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2f41b090179b745b085808d7bab5e470 = $(`<div id="html_2f41b090179b745b085808d7bab5e470" style="width: 100.0%; height: 100.0%;">         <div>             <b>200 Gray's Inn Road</b><br>             <a href="https://25605544.fs1.hubspotusercontent-eu1.net/hubfs/25605544/200-grays-inn-road-client.brochure.pdf.pdf" target="_blank">Click here to view the brochure</a>         </div>         </div>`)[0];
+                popup_fadea25b980ccbf62f352de378255017.setContent(html_2f41b090179b745b085808d7bab5e470);
+            
+        
+
+        marker_0a7dca3fe5ebae810f9b39fd0a1af56a.bindPopup(popup_fadea25b980ccbf62f352de378255017)
+        ;
+
+        
+    
+    
+                marker_0a7dca3fe5ebae810f9b39fd0a1af56a.setIcon(icon_a4cc077f22d13d7cfa1ffc886e47e570);
+            
+    
+            var circle_e409ad2350fb82373060beac2b172b6b = L.circle(
+                [51.5235, -0.1141],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 150, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var marker_f2cf7f0faa2c5640ae17ccd21d0d1f70 = L.marker(
+                [51.5136, -0.1156],
+                {
+}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            var icon_56ae007658e5a458bdcc72cbdd2404e9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_df319c47b8592071b1c03a1b194e5148 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c3eee94e5cddd44736b791d32984a9b7 = $(`<div id="html_c3eee94e5cddd44736b791d32984a9b7" style="width: 100.0%; height: 100.0%;">         <div>             <b>Aldwych House, 71-91 Aldwych</b><br>             <a href="https://25605544.fs1.hubspotusercontent-eu1.net/hubfs/25605544/aldwych-house-wc2.client.brochure.pdf.pdf" target="_blank">Click here to view the brochure</a>         </div>         </div>`)[0];
+                popup_df319c47b8592071b1c03a1b194e5148.setContent(html_c3eee94e5cddd44736b791d32984a9b7);
+            
+        
+
+        marker_f2cf7f0faa2c5640ae17ccd21d0d1f70.bindPopup(popup_df319c47b8592071b1c03a1b194e5148)
+        ;
+
+        
+    
+    
+                marker_f2cf7f0faa2c5640ae17ccd21d0d1f70.setIcon(icon_56ae007658e5a458bdcc72cbdd2404e9);
+            
+    
+            var circle_98439c8b70f589602ec449c49d83d87b = L.circle(
+                [51.5136, -0.1156],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 150, "stroke": true, "weight": 1}
+            ).addTo(feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59);
+        
+    
+            feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59.addTo(map_374ab15d21194052c00eccade251a37d);
+        
+    
+            var feature_group_5adffca57426c9ffb6f10668dee98590 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_a9307209d15cb9f9b2f735e3054a6561 = L.circle(
+                [51.517, -0.0827],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_ca18997baa7ef67533d1aca81b9f82c9 = L.marker(
+                [51.517, -0.0827],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_477d5be630e24a0f8a1b4d3c4af39cc1 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_ca18997baa7ef67533d1aca81b9f82c9.setIcon(custom_icon_477d5be630e24a0f8a1b4d3c4af39cc1);
+        
+    
+        var popup_01a2663198641f6fc132d3c6b5c53c00 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c97afd7963ba3163d8ba5a66da7da95d = $(`<div id="html_c97afd7963ba3163d8ba5a66da7da95d" style="width: 100.0%; height: 100.0%;">The Ivy City Garden (Restaurant)</div>`)[0];
+                popup_01a2663198641f6fc132d3c6b5c53c00.setContent(html_c97afd7963ba3163d8ba5a66da7da95d);
+            
+        
+
+        marker_ca18997baa7ef67533d1aca81b9f82c9.bindPopup(popup_01a2663198641f6fc132d3c6b5c53c00)
+        ;
+
+        
+    
+    
+                marker_ca18997baa7ef67533d1aca81b9f82c9.setIcon(custom_icon_477d5be630e24a0f8a1b4d3c4af39cc1);
+            
+    
+            var circle_a4f3ae6609bc65cd322302fc7114b7ec = L.circle(
+                [51.5149, -0.0872],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_188e6bf94e4e756afb949abaface18df = L.marker(
+                [51.5149, -0.0872],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_5c5f7fb48eafe8ca752b2f1ca797eddd = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_188e6bf94e4e756afb949abaface18df.setIcon(custom_icon_5c5f7fb48eafe8ca752b2f1ca797eddd);
+        
+    
+        var popup_c1de355ba89cf7a88b1c5350bf248d13 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_25b66f1180747f288a384dba11107c60 = $(`<div id="html_25b66f1180747f288a384dba11107c60" style="width: 100.0%; height: 100.0%;">Coya Angel Court (Restaurant)</div>`)[0];
+                popup_c1de355ba89cf7a88b1c5350bf248d13.setContent(html_25b66f1180747f288a384dba11107c60);
+            
+        
+
+        marker_188e6bf94e4e756afb949abaface18df.bindPopup(popup_c1de355ba89cf7a88b1c5350bf248d13)
+        ;
+
+        
+    
+    
+                marker_188e6bf94e4e756afb949abaface18df.setIcon(custom_icon_5c5f7fb48eafe8ca752b2f1ca797eddd);
+            
+    
+            var circle_cab8686ba3a53cdd24df775fd8d52929 = L.circle(
+                [51.5179, -0.0863],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_9cfb0d05c00205ad3cfed90266fe5a0b = L.marker(
+                [51.5179, -0.0863],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_edfa015c999a057141b3e248ff141c38 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_9cfb0d05c00205ad3cfed90266fe5a0b.setIcon(custom_icon_edfa015c999a057141b3e248ff141c38);
+        
+    
+        var popup_51dcc11435b576513099e037648a269e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_56a08ffdaacbe4ea41e059b9aa13de35 = $(`<div id="html_56a08ffdaacbe4ea41e059b9aa13de35" style="width: 100.0%; height: 100.0%;">Finsbury Circus Garden (Park)</div>`)[0];
+                popup_51dcc11435b576513099e037648a269e.setContent(html_56a08ffdaacbe4ea41e059b9aa13de35);
+            
+        
+
+        marker_9cfb0d05c00205ad3cfed90266fe5a0b.bindPopup(popup_51dcc11435b576513099e037648a269e)
+        ;
+
+        
+    
+    
+                marker_9cfb0d05c00205ad3cfed90266fe5a0b.setIcon(custom_icon_edfa015c999a057141b3e248ff141c38);
+            
+    
+            var circle_8e884d27a5a3cdff1750f4a439615dc5 = L.circle(
+                [51.5153, -0.0891],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_b33ea928d851881d15a04a82b000dcc2 = L.marker(
+                [51.5153, -0.0891],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_3f89c3afd1b1c349290aa56d212a02de = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_b33ea928d851881d15a04a82b000dcc2.setIcon(custom_icon_3f89c3afd1b1c349290aa56d212a02de);
+        
+    
+        var popup_7b02dd766be458c495f103f96db7c294 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_61c8e8f38b1c137c79d81b4acdc17023 = $(`<div id="html_61c8e8f38b1c137c79d81b4acdc17023" style="width: 100.0%; height: 100.0%;">The Tokenhouse (Pub)</div>`)[0];
+                popup_7b02dd766be458c495f103f96db7c294.setContent(html_61c8e8f38b1c137c79d81b4acdc17023);
+            
+        
+
+        marker_b33ea928d851881d15a04a82b000dcc2.bindPopup(popup_7b02dd766be458c495f103f96db7c294)
+        ;
+
+        
+    
+    
+                marker_b33ea928d851881d15a04a82b000dcc2.setIcon(custom_icon_3f89c3afd1b1c349290aa56d212a02de);
+            
+    
+            var circle_bb5223ee1b253400c5a60ec57d09c199 = L.circle(
+                [51.515, -0.0913],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_add516cf9dad38d136d3a3d427d8314f = L.marker(
+                [51.515, -0.0913],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_49d95c2f74a6f435fce6e36bb5a4e113 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_add516cf9dad38d136d3a3d427d8314f.setIcon(custom_icon_49d95c2f74a6f435fce6e36bb5a4e113);
+        
+    
+        var popup_219a3eec337c9d5f8f7a007ae480e97c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_90b999715c0fbf847556d8e7c21f8257 = $(`<div id="html_90b999715c0fbf847556d8e7c21f8257" style="width: 100.0%; height: 100.0%;">The Anthologist (Pub)</div>`)[0];
+                popup_219a3eec337c9d5f8f7a007ae480e97c.setContent(html_90b999715c0fbf847556d8e7c21f8257);
+            
+        
+
+        marker_add516cf9dad38d136d3a3d427d8314f.bindPopup(popup_219a3eec337c9d5f8f7a007ae480e97c)
+        ;
+
+        
+    
+    
+                marker_add516cf9dad38d136d3a3d427d8314f.setIcon(custom_icon_49d95c2f74a6f435fce6e36bb5a4e113);
+            
+    
+            var circle_2c3019b527cac7f375508e52ec3a046a = L.circle(
+                [51.5153, -0.0823],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_18276b2b6475db79d3e493f673ec2751 = L.marker(
+                [51.5153, -0.0823],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_8d442f36bee33f398adbca8fa432b59b = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_18276b2b6475db79d3e493f673ec2751.setIcon(custom_icon_8d442f36bee33f398adbca8fa432b59b);
+        
+    
+        var popup_66a1c93d2a4fe36c3078ecef9df1461e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3043f31d731e7c208dd44f834b45f6a1 = $(`<div id="html_3043f31d731e7c208dd44f834b45f6a1" style="width: 100.0%; height: 100.0%;">Haz (Restaurant)</div>`)[0];
+                popup_66a1c93d2a4fe36c3078ecef9df1461e.setContent(html_3043f31d731e7c208dd44f834b45f6a1);
+            
+        
+
+        marker_18276b2b6475db79d3e493f673ec2751.bindPopup(popup_66a1c93d2a4fe36c3078ecef9df1461e)
+        ;
+
+        
+    
+    
+                marker_18276b2b6475db79d3e493f673ec2751.setIcon(custom_icon_8d442f36bee33f398adbca8fa432b59b);
+            
+    
+            var circle_6895f344b0874c5b40bc4ced155582b8 = L.circle(
+                [51.5168, -0.0976],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_f86cf8bea3df4aa91700d585a48efca9 = L.marker(
+                [51.5168, -0.0976],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_df68d833887845db5383c29a09849a54 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_f86cf8bea3df4aa91700d585a48efca9.setIcon(custom_icon_df68d833887845db5383c29a09849a54);
+        
+    
+        var popup_bb913b1bc0cac09af857ee02d9ee40de = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_46f9ee1e738ac6cae6f750c5397b9834 = $(`<div id="html_46f9ee1e738ac6cae6f750c5397b9834" style="width: 100.0%; height: 100.0%;">Postman's Park (Park)</div>`)[0];
+                popup_bb913b1bc0cac09af857ee02d9ee40de.setContent(html_46f9ee1e738ac6cae6f750c5397b9834);
+            
+        
+
+        marker_f86cf8bea3df4aa91700d585a48efca9.bindPopup(popup_bb913b1bc0cac09af857ee02d9ee40de)
+        ;
+
+        
+    
+    
+                marker_f86cf8bea3df4aa91700d585a48efca9.setIcon(custom_icon_df68d833887845db5383c29a09849a54);
+            
+    
+            var circle_85107f54ab71ce4ec4d8b12280b13163 = L.circle(
+                [51.5189, -0.0858],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_7f1395ec10a4fceaa05bdfc71cb7be98 = L.marker(
+                [51.5189, -0.0858],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_19863d8e368a8160b78634309b0f754f = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_7f1395ec10a4fceaa05bdfc71cb7be98.setIcon(custom_icon_19863d8e368a8160b78634309b0f754f);
+        
+    
+        var popup_fce6ed4efde005582ac72d5a5578c13d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_971d4f7cc1a12c4b6c8b4c1603da75f6 = $(`<div id="html_971d4f7cc1a12c4b6c8b4c1603da75f6" style="width: 100.0%; height: 100.0%;">Red Lion (Pub)</div>`)[0];
+                popup_fce6ed4efde005582ac72d5a5578c13d.setContent(html_971d4f7cc1a12c4b6c8b4c1603da75f6);
+            
+        
+
+        marker_7f1395ec10a4fceaa05bdfc71cb7be98.bindPopup(popup_fce6ed4efde005582ac72d5a5578c13d)
+        ;
+
+        
+    
+    
+                marker_7f1395ec10a4fceaa05bdfc71cb7be98.setIcon(custom_icon_19863d8e368a8160b78634309b0f754f);
+            
+    
+            var circle_f4324c5b05858a8efb2aff494a209631 = L.circle(
+                [51.5167, -0.1191],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_52a6104a4d7bcdcbefb322d1c592c973 = L.marker(
+                [51.5167, -0.1191],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_2539e686f15fa871c5a0c7ebcb0a7f58 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_52a6104a4d7bcdcbefb322d1c592c973.setIcon(custom_icon_2539e686f15fa871c5a0c7ebcb0a7f58);
+        
+    
+        var popup_045478652870d416f20a0e08e42c99dd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cd86a8af667b6772f59461c306c51519 = $(`<div id="html_cd86a8af667b6772f59461c306c51519" style="width: 100.0%; height: 100.0%;">Viet Eat (Restaurant)</div>`)[0];
+                popup_045478652870d416f20a0e08e42c99dd.setContent(html_cd86a8af667b6772f59461c306c51519);
+            
+        
+
+        marker_52a6104a4d7bcdcbefb322d1c592c973.bindPopup(popup_045478652870d416f20a0e08e42c99dd)
+        ;
+
+        
+    
+    
+                marker_52a6104a4d7bcdcbefb322d1c592c973.setIcon(custom_icon_2539e686f15fa871c5a0c7ebcb0a7f58);
+            
+    
+            var circle_371a19c247c75dac38d1a6e5c645e3ca = L.circle(
+                [51.5185, -0.1128],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_39efc8daf40d66572a30cf995828d2d9 = L.marker(
+                [51.5185, -0.1128],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_fd6e26470734ebde2fd6d77553a3ce5c = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_39efc8daf40d66572a30cf995828d2d9.setIcon(custom_icon_fd6e26470734ebde2fd6d77553a3ce5c);
+        
+    
+        var popup_166c22f53d28fd5e9e4f3cbd50ccad94 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_451674f1d0798ba5e683f6246b11cb01 = $(`<div id="html_451674f1d0798ba5e683f6246b11cb01" style="width: 100.0%; height: 100.0%;">The Cittie of Yorke (Pub)</div>`)[0];
+                popup_166c22f53d28fd5e9e4f3cbd50ccad94.setContent(html_451674f1d0798ba5e683f6246b11cb01);
+            
+        
+
+        marker_39efc8daf40d66572a30cf995828d2d9.bindPopup(popup_166c22f53d28fd5e9e4f3cbd50ccad94)
+        ;
+
+        
+    
+    
+                marker_39efc8daf40d66572a30cf995828d2d9.setIcon(custom_icon_fd6e26470734ebde2fd6d77553a3ce5c);
+            
+    
+            var circle_1894f6907fd581dc12cefa092fad0ccd = L.circle(
+                [51.512, -0.1198],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_0de23ae1e1112412e870bb2a5e797f09 = L.marker(
+                [51.512, -0.1198],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_42edd6ebb860dfbe3037e18181d6f5ac = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_0de23ae1e1112412e870bb2a5e797f09.setIcon(custom_icon_42edd6ebb860dfbe3037e18181d6f5ac);
+        
+    
+        var popup_b39cf5dc5fb82e8dde93b73683375eb3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6039f238aa15f48fe91528a8d8986c63 = $(`<div id="html_6039f238aa15f48fe91528a8d8986c63" style="width: 100.0%; height: 100.0%;">Christopher's Grill (Restaurant)</div>`)[0];
+                popup_b39cf5dc5fb82e8dde93b73683375eb3.setContent(html_6039f238aa15f48fe91528a8d8986c63);
+            
+        
+
+        marker_0de23ae1e1112412e870bb2a5e797f09.bindPopup(popup_b39cf5dc5fb82e8dde93b73683375eb3)
+        ;
+
+        
+    
+    
+                marker_0de23ae1e1112412e870bb2a5e797f09.setIcon(custom_icon_42edd6ebb860dfbe3037e18181d6f5ac);
+            
+    
+            var circle_fab0d03373013b73ab5ab0cf713d89e6 = L.circle(
+                [51.5089, -0.1224],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_30230de2a476c55e984628a32f95819d = L.marker(
+                [51.5089, -0.1224],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_5a6fe8d2074f0edd57f154605fe4767d = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_30230de2a476c55e984628a32f95819d.setIcon(custom_icon_5a6fe8d2074f0edd57f154605fe4767d);
+        
+    
+        var popup_3334a20e6a630e0fe91e61eebbbcaed0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_70059d8b121d9192f3194b6ae4f75b8e = $(`<div id="html_70059d8b121d9192f3194b6ae4f75b8e" style="width: 100.0%; height: 100.0%;">Victoria Embankment Gardens (Park)</div>`)[0];
+                popup_3334a20e6a630e0fe91e61eebbbcaed0.setContent(html_70059d8b121d9192f3194b6ae4f75b8e);
+            
+        
+
+        marker_30230de2a476c55e984628a32f95819d.bindPopup(popup_3334a20e6a630e0fe91e61eebbbcaed0)
+        ;
+
+        
+    
+    
+                marker_30230de2a476c55e984628a32f95819d.setIcon(custom_icon_5a6fe8d2074f0edd57f154605fe4767d);
+            
+    
+            var circle_f344497a82332d1cd9d17ae739c7034f = L.circle(
+                [51.5115, -0.1195],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_9bcc7c6f6736e0e36baba2fe4e2e0a1e = L.marker(
+                [51.5115, -0.1195],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_910a45d062d35c39a50b96875230f1cc = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_9bcc7c6f6736e0e36baba2fe4e2e0a1e.setIcon(custom_icon_910a45d062d35c39a50b96875230f1cc);
+        
+    
+        var popup_ea5f7ac72b826fa4b46351c064de3624 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6c1c56c80929bd620486c8e1dd8710d7 = $(`<div id="html_6c1c56c80929bd620486c8e1dd8710d7" style="width: 100.0%; height: 100.0%;">The Wellington Pub (Pub)</div>`)[0];
+                popup_ea5f7ac72b826fa4b46351c064de3624.setContent(html_6c1c56c80929bd620486c8e1dd8710d7);
+            
+        
+
+        marker_9bcc7c6f6736e0e36baba2fe4e2e0a1e.bindPopup(popup_ea5f7ac72b826fa4b46351c064de3624)
+        ;
+
+        
+    
+    
+                marker_9bcc7c6f6736e0e36baba2fe4e2e0a1e.setIcon(custom_icon_910a45d062d35c39a50b96875230f1cc);
+            
+    
+            var circle_e44af2afd6f11e8f0eaa8cbecf145f86 = L.circle(
+                [51.5232, -0.1148],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_dc300bd2a180fe9283382db5819a05b6 = L.marker(
+                [51.5232, -0.1148],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_0ed9276b037917a8e006d7b3807a61d1 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_dc300bd2a180fe9283382db5819a05b6.setIcon(custom_icon_0ed9276b037917a8e006d7b3807a61d1);
+        
+    
+        var popup_f5ff2ed5dc9628f9ff196e604801b415 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_50590e5e59a3652e95bad17d6b255da9 = $(`<div id="html_50590e5e59a3652e95bad17d6b255da9" style="width: 100.0%; height: 100.0%;">Luce e Limoni (Restaurant)</div>`)[0];
+                popup_f5ff2ed5dc9628f9ff196e604801b415.setContent(html_50590e5e59a3652e95bad17d6b255da9);
+            
+        
+
+        marker_dc300bd2a180fe9283382db5819a05b6.bindPopup(popup_f5ff2ed5dc9628f9ff196e604801b415)
+        ;
+
+        
+    
+    
+                marker_dc300bd2a180fe9283382db5819a05b6.setIcon(custom_icon_0ed9276b037917a8e006d7b3807a61d1);
+            
+    
+            var circle_5e9667e292afb31317396cf1b2f9a053 = L.circle(
+                [51.5138, -0.1162],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_32d9d8f3e92cddce3ae8cec943b54696 = L.marker(
+                [51.5138, -0.1162],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_372fedfad0da713725e7876f1d912a5b = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/fork-and-knife-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_32d9d8f3e92cddce3ae8cec943b54696.setIcon(custom_icon_372fedfad0da713725e7876f1d912a5b);
+        
+    
+        var popup_f205af9e19d0b885883b99b05ac4d089 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3ff2306b14884dd4af577fcfcdd62017 = $(`<div id="html_3ff2306b14884dd4af577fcfcdd62017" style="width: 100.0%; height: 100.0%;">ROKA Aldwych (Restaurant)</div>`)[0];
+                popup_f205af9e19d0b885883b99b05ac4d089.setContent(html_3ff2306b14884dd4af577fcfcdd62017);
+            
+        
+
+        marker_32d9d8f3e92cddce3ae8cec943b54696.bindPopup(popup_f205af9e19d0b885883b99b05ac4d089)
+        ;
+
+        
+    
+    
+                marker_32d9d8f3e92cddce3ae8cec943b54696.setIcon(custom_icon_372fedfad0da713725e7876f1d912a5b);
+            
+    
+            var circle_89ecf4504d8ae42aadbe3ebd042f6a6c = L.circle(
+                [51.5171, -0.1171],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_47f6f73654be51eb85ac984c853e780e = L.marker(
+                [51.5171, -0.1171],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_38cbba1826a3f758109b1e00fc5a7d3f = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_47f6f73654be51eb85ac984c853e780e.setIcon(custom_icon_38cbba1826a3f758109b1e00fc5a7d3f);
+        
+    
+        var popup_a41aa6c7d9950a359ca42072b6515cbb = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b8823db660d0e053e2e4e0eaf6f5ea5c = $(`<div id="html_b8823db660d0e053e2e4e0eaf6f5ea5c" style="width: 100.0%; height: 100.0%;">Lincoln's Inn Fields (Park)</div>`)[0];
+                popup_a41aa6c7d9950a359ca42072b6515cbb.setContent(html_b8823db660d0e053e2e4e0eaf6f5ea5c);
+            
+        
+
+        marker_47f6f73654be51eb85ac984c853e780e.bindPopup(popup_a41aa6c7d9950a359ca42072b6515cbb)
+        ;
+
+        
+    
+    
+                marker_47f6f73654be51eb85ac984c853e780e.setIcon(custom_icon_38cbba1826a3f758109b1e00fc5a7d3f);
+            
+    
+            var circle_e755029bc3b4370fa8f2085a7596768c = L.circle(
+                [51.5132, -0.0966],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_606e42556ae88e3dea1064f85939103b = L.marker(
+                [51.5132, -0.0966],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_bec72038dde940678cb567e9e24f17de = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_606e42556ae88e3dea1064f85939103b.setIcon(custom_icon_bec72038dde940678cb567e9e24f17de);
+        
+    
+        var popup_3a17c7d0935dc33fbd5c3ae150b9f98c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_868130894ac3236e0eaf77d4108805c8 = $(`<div id="html_868130894ac3236e0eaf77d4108805c8" style="width: 100.0%; height: 100.0%;">Festival Gardens (Park)</div>`)[0];
+                popup_3a17c7d0935dc33fbd5c3ae150b9f98c.setContent(html_868130894ac3236e0eaf77d4108805c8);
+            
+        
+
+        marker_606e42556ae88e3dea1064f85939103b.bindPopup(popup_3a17c7d0935dc33fbd5c3ae150b9f98c)
+        ;
+
+        
+    
+    
+                marker_606e42556ae88e3dea1064f85939103b.setIcon(custom_icon_bec72038dde940678cb567e9e24f17de);
+            
+    
+            var circle_bf5466c441b68c18ce521e956e12a326 = L.circle(
+                [51.5196, -0.094],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_e33a539428ce7c2855d25bf4587c0637 = L.marker(
+                [51.5196, -0.094],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_31bb03f0bc1b439087571d722627ca2e = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_e33a539428ce7c2855d25bf4587c0637.setIcon(custom_icon_31bb03f0bc1b439087571d722627ca2e);
+        
+    
+        var popup_712c4526357751dcd3fa868b04940a42 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8780a71afa317c486f6994dd75e8e77c = $(`<div id="html_8780a71afa317c486f6994dd75e8e77c" style="width: 100.0%; height: 100.0%;">Lakeside Terrace (Park)</div>`)[0];
+                popup_712c4526357751dcd3fa868b04940a42.setContent(html_8780a71afa317c486f6994dd75e8e77c);
+            
+        
+
+        marker_e33a539428ce7c2855d25bf4587c0637.bindPopup(popup_712c4526357751dcd3fa868b04940a42)
+        ;
+
+        
+    
+    
+                marker_e33a539428ce7c2855d25bf4587c0637.setIcon(custom_icon_31bb03f0bc1b439087571d722627ca2e);
+            
+    
+            var circle_912796f214289f303bb29f6c8765ce55 = L.circle(
+                [51.5259, -0.1076],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_f055ca103635f920b9e14d3288bf3815 = L.marker(
+                [51.5259, -0.1076],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_2e9c7e75d6e42c5c9c29e020298dc2f9 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/tree-576847.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_f055ca103635f920b9e14d3288bf3815.setIcon(custom_icon_2e9c7e75d6e42c5c9c29e020298dc2f9);
+        
+    
+        var popup_d898043bdb71ef5f6553b5bcd8d814bd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a44783e49da25139652ed14a80a9055b = $(`<div id="html_a44783e49da25139652ed14a80a9055b" style="width: 100.0%; height: 100.0%;">Spa Fields (Park)</div>`)[0];
+                popup_d898043bdb71ef5f6553b5bcd8d814bd.setContent(html_a44783e49da25139652ed14a80a9055b);
+            
+        
+
+        marker_f055ca103635f920b9e14d3288bf3815.bindPopup(popup_d898043bdb71ef5f6553b5bcd8d814bd)
+        ;
+
+        
+    
+    
+                marker_f055ca103635f920b9e14d3288bf3815.setIcon(custom_icon_2e9c7e75d6e42c5c9c29e020298dc2f9);
+            
+    
+            var circle_0df3b1d3860643bfab5c10e1a1c60dec = L.circle(
+                [51.5157, -0.0903],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_30920ece91fa7f5978f52d97619a50c2 = L.marker(
+                [51.5157, -0.0903],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_48bbf51724fc2c3ed042a7d31b4aafe7 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_30920ece91fa7f5978f52d97619a50c2.setIcon(custom_icon_48bbf51724fc2c3ed042a7d31b4aafe7);
+        
+    
+        var popup_dc152cab8d0fce53d80738bb7d9b257e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a9e1ae30cdf7aca16305a5488b45f0b2 = $(`<div id="html_a9e1ae30cdf7aca16305a5488b45f0b2" style="width: 100.0%; height: 100.0%;">Old Doctor Butler's Head (Pub)</div>`)[0];
+                popup_dc152cab8d0fce53d80738bb7d9b257e.setContent(html_a9e1ae30cdf7aca16305a5488b45f0b2);
+            
+        
+
+        marker_30920ece91fa7f5978f52d97619a50c2.bindPopup(popup_dc152cab8d0fce53d80738bb7d9b257e)
+        ;
+
+        
+    
+    
+                marker_30920ece91fa7f5978f52d97619a50c2.setIcon(custom_icon_48bbf51724fc2c3ed042a7d31b4aafe7);
+            
+    
+            var circle_93a5db548df9b880bda6ff5f1cc8658b = L.circle(
+                [51.5186, -0.1074],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_b399e0d3676a2e79180f40a750e59e27 = L.marker(
+                [51.5186, -0.1074],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_20b3dfeff2feb579e3a708b8b07ee114 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_b399e0d3676a2e79180f40a750e59e27.setIcon(custom_icon_20b3dfeff2feb579e3a708b8b07ee114);
+        
+    
+        var popup_1ad2d816696e7b98c707ee70210e19ae = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8a7b1b5a14f6f1196d7ebafc776c0bb0 = $(`<div id="html_8a7b1b5a14f6f1196d7ebafc776c0bb0" style="width: 100.0%; height: 100.0%;">Ye Olde Mitre (Pub)</div>`)[0];
+                popup_1ad2d816696e7b98c707ee70210e19ae.setContent(html_8a7b1b5a14f6f1196d7ebafc776c0bb0);
+            
+        
+
+        marker_b399e0d3676a2e79180f40a750e59e27.bindPopup(popup_1ad2d816696e7b98c707ee70210e19ae)
+        ;
+
+        
+    
+    
+                marker_b399e0d3676a2e79180f40a750e59e27.setIcon(custom_icon_20b3dfeff2feb579e3a708b8b07ee114);
+            
+    
+            var circle_f368adedb023e2055b23f95bda334685 = L.circle(
+                [51.5074, -0.0928],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_cb382dc9f847ca69d0c025a766189bdc = L.marker(
+                [51.5074, -0.0928],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_9494e63f93e5133a6c244e8d351b18b1 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_cb382dc9f847ca69d0c025a766189bdc.setIcon(custom_icon_9494e63f93e5133a6c244e8d351b18b1);
+        
+    
+        var popup_5f54fb2c105eceef5c458261e5b08db5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7571f6c282bf5e55fee225c4381f974e = $(`<div id="html_7571f6c282bf5e55fee225c4381f974e" style="width: 100.0%; height: 100.0%;">Anchor Bankside (Pub)</div>`)[0];
+                popup_5f54fb2c105eceef5c458261e5b08db5.setContent(html_7571f6c282bf5e55fee225c4381f974e);
+            
+        
+
+        marker_cb382dc9f847ca69d0c025a766189bdc.bindPopup(popup_5f54fb2c105eceef5c458261e5b08db5)
+        ;
+
+        
+    
+    
+                marker_cb382dc9f847ca69d0c025a766189bdc.setIcon(custom_icon_9494e63f93e5133a6c244e8d351b18b1);
+            
+    
+            var circle_ba3d2d945092c7b2a19388293848fc98 = L.circle(
+                [51.522, -0.1173],
+                {"bubblingMouseEvents": true, "color": "purple", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "purple", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 36, "stroke": true, "weight": 1}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+            var marker_e9844288f50bf7523133a4e1fdf003b1 = L.marker(
+                [51.522, -0.1173],
+                {
+}
+            ).addTo(feature_group_5adffca57426c9ffb6f10668dee98590);
+        
+    
+        var custom_icon_d9c11dca95def2553ab1ad3ab4192b93 = L.icon({
+  "iconUrl": "https://raw.githubusercontent.com/HaseebInReal/MiQ/main/pint-svgrepo-com.svg",
+  "iconSize": [24, 24],
+  "iconAnchor": [12, 12],
+});
+        marker_e9844288f50bf7523133a4e1fdf003b1.setIcon(custom_icon_d9c11dca95def2553ab1ad3ab4192b93);
+        
+    
+        var popup_1efa92d816f800f5270bac303d4accdc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5c138046cd26341f79d67d33100431b0 = $(`<div id="html_5c138046cd26341f79d67d33100431b0" style="width: 100.0%; height: 100.0%;">Rugby Tavern (Pub)</div>`)[0];
+                popup_1efa92d816f800f5270bac303d4accdc.setContent(html_5c138046cd26341f79d67d33100431b0);
+            
+        
+
+        marker_e9844288f50bf7523133a4e1fdf003b1.bindPopup(popup_1efa92d816f800f5270bac303d4accdc)
+        ;
+
+        
+    
+    
+                marker_e9844288f50bf7523133a4e1fdf003b1.setIcon(custom_icon_d9c11dca95def2553ab1ad3ab4192b93);
+            
+    
+            feature_group_5adffca57426c9ffb6f10668dee98590.addTo(map_374ab15d21194052c00eccade251a37d);
+        
+    
+            var feature_group_fc721755a9a08a61574b59c6e8c63c9a = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_b886021312201ce3ed73380a7a7234db = L.marker(
+                [51.5178, -0.0824],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_257081abb4377a2364589cd916680dee = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_b886021312201ce3ed73380a7a7234db.setIcon(div_icon_257081abb4377a2364589cd916680dee);
+        
+    
+        var popup_227aaf773df6003db3ebdc9ed11c21e4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a4933ef056cd0771b34a833803435a74 = $(`<div id="html_a4933ef056cd0771b34a833803435a74" style="width: 100.0%; height: 100.0%;">Liverpool Street Station</div>`)[0];
+                popup_227aaf773df6003db3ebdc9ed11c21e4.setContent(html_a4933ef056cd0771b34a833803435a74);
+            
+        
+
+        marker_b886021312201ce3ed73380a7a7234db.bindPopup(popup_227aaf773df6003db3ebdc9ed11c21e4)
+        ;
+
+        
+    
+    
+                marker_b886021312201ce3ed73380a7a7234db.setIcon(div_icon_257081abb4377a2364589cd916680dee);
+            
+    
+            var marker_de8ea05e0f19253db8fa5125312087b0 = L.marker(
+                [51.5187, -0.0889],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_2bde59a0cf97119e8deb8c53be0c4b24 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_de8ea05e0f19253db8fa5125312087b0.setIcon(div_icon_2bde59a0cf97119e8deb8c53be0c4b24);
+        
+    
+        var popup_07a26e5898521642fdd1edf237bf4f62 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0d8ff2467ff2d95849d5305da1964638 = $(`<div id="html_0d8ff2467ff2d95849d5305da1964638" style="width: 100.0%; height: 100.0%;">Moorgate Station</div>`)[0];
+                popup_07a26e5898521642fdd1edf237bf4f62.setContent(html_0d8ff2467ff2d95849d5305da1964638);
+            
+        
+
+        marker_de8ea05e0f19253db8fa5125312087b0.bindPopup(popup_07a26e5898521642fdd1edf237bf4f62)
+        ;
+
+        
+    
+    
+                marker_de8ea05e0f19253db8fa5125312087b0.setIcon(div_icon_2bde59a0cf97119e8deb8c53be0c4b24);
+            
+    
+            var marker_3f87a618061c882756d5f12e19eb67fd = L.marker(
+                [51.5133, -0.089],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_f49db6e8cf36d8bbf30727a7b26d7fe8 = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_3f87a618061c882756d5f12e19eb67fd.setIcon(div_icon_f49db6e8cf36d8bbf30727a7b26d7fe8);
+        
+    
+        var popup_bd9cfff64acfaeb1b4c4a6cb77afad92 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ab299ce6eb617597418411ad7b35a966 = $(`<div id="html_ab299ce6eb617597418411ad7b35a966" style="width: 100.0%; height: 100.0%;">Bank Station</div>`)[0];
+                popup_bd9cfff64acfaeb1b4c4a6cb77afad92.setContent(html_ab299ce6eb617597418411ad7b35a966);
+            
+        
+
+        marker_3f87a618061c882756d5f12e19eb67fd.bindPopup(popup_bd9cfff64acfaeb1b4c4a6cb77afad92)
+        ;
+
+        
+    
+    
+                marker_3f87a618061c882756d5f12e19eb67fd.setIcon(div_icon_f49db6e8cf36d8bbf30727a7b26d7fe8);
+            
+    
+            var marker_f380dcb7e97948e7802bee6538173326 = L.marker(
+                [51.518, -0.111],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_fe36f719cc305811829f4b8a2b4cbf02 = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_f380dcb7e97948e7802bee6538173326.setIcon(div_icon_fe36f719cc305811829f4b8a2b4cbf02);
+        
+    
+        var popup_3d2a3e00eaad519bdd29629a92d821ba = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_776091aadee47d487635349ff377c7df = $(`<div id="html_776091aadee47d487635349ff377c7df" style="width: 100.0%; height: 100.0%;">Chancery Lane Station</div>`)[0];
+                popup_3d2a3e00eaad519bdd29629a92d821ba.setContent(html_776091aadee47d487635349ff377c7df);
+            
+        
+
+        marker_f380dcb7e97948e7802bee6538173326.bindPopup(popup_3d2a3e00eaad519bdd29629a92d821ba)
+        ;
+
+        
+    
+    
+                marker_f380dcb7e97948e7802bee6538173326.setIcon(div_icon_fe36f719cc305811829f4b8a2b4cbf02);
+            
+    
+            var marker_c0e3ad9db9b6bf5794e703765344f98e = L.marker(
+                [51.5172, -0.1195],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_3b5b1c322b29c5bf2668e9a75c364238 = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_c0e3ad9db9b6bf5794e703765344f98e.setIcon(div_icon_3b5b1c322b29c5bf2668e9a75c364238);
+        
+    
+        var popup_5688f35df831165d2b86157b841ff77d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_64153f87e08e338ec4def8ea3375c462 = $(`<div id="html_64153f87e08e338ec4def8ea3375c462" style="width: 100.0%; height: 100.0%;">Holborn Station</div>`)[0];
+                popup_5688f35df831165d2b86157b841ff77d.setContent(html_64153f87e08e338ec4def8ea3375c462);
+            
+        
+
+        marker_c0e3ad9db9b6bf5794e703765344f98e.bindPopup(popup_5688f35df831165d2b86157b841ff77d)
+        ;
+
+        
+    
+    
+                marker_c0e3ad9db9b6bf5794e703765344f98e.setIcon(div_icon_3b5b1c322b29c5bf2668e9a75c364238);
+            
+    
+            var marker_eafae2e1dc76422ada5a638aaa4b4ee3 = L.marker(
+                [51.5205, -0.1052],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_f06f198ac4cc21e8366ec6d6f002af13 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_eafae2e1dc76422ada5a638aaa4b4ee3.setIcon(div_icon_f06f198ac4cc21e8366ec6d6f002af13);
+        
+    
+        var popup_ebc78837220e7dfd4ab3e713dcf32148 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c137ce327341de8e0a1ee1ef20713dcc = $(`<div id="html_c137ce327341de8e0a1ee1ef20713dcc" style="width: 100.0%; height: 100.0%;">Farringdon Station</div>`)[0];
+                popup_ebc78837220e7dfd4ab3e713dcf32148.setContent(html_c137ce327341de8e0a1ee1ef20713dcc);
+            
+        
+
+        marker_eafae2e1dc76422ada5a638aaa4b4ee3.bindPopup(popup_ebc78837220e7dfd4ab3e713dcf32148)
+        ;
+
+        
+    
+    
+                marker_eafae2e1dc76422ada5a638aaa4b4ee3.setIcon(div_icon_f06f198ac4cc21e8366ec6d6f002af13);
+            
+    
+            var marker_fa79469ea04bbb3ce35140f68cfedc98 = L.marker(
+                [51.5204, -0.0977],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_c9c33fb69b7bf419b4717b80fee309fc = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_fa79469ea04bbb3ce35140f68cfedc98.setIcon(div_icon_c9c33fb69b7bf419b4717b80fee309fc);
+        
+    
+        var popup_52cc4f5b6520c7dcfcca7f68ea039379 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d246e0863cb4ee079816d4a7e6d23928 = $(`<div id="html_d246e0863cb4ee079816d4a7e6d23928" style="width: 100.0%; height: 100.0%;">Barbican Station</div>`)[0];
+                popup_52cc4f5b6520c7dcfcca7f68ea039379.setContent(html_d246e0863cb4ee079816d4a7e6d23928);
+            
+        
+
+        marker_fa79469ea04bbb3ce35140f68cfedc98.bindPopup(popup_52cc4f5b6520c7dcfcca7f68ea039379)
+        ;
+
+        
+    
+    
+                marker_fa79469ea04bbb3ce35140f68cfedc98.setIcon(div_icon_c9c33fb69b7bf419b4717b80fee309fc);
+            
+    
+            var marker_f1d4dcb4661a9e41e654a11ee81dbefa = L.marker(
+                [51.5308, -0.1238],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_51c38ea1e4a9f79dc82738c21f2a8c81 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_f1d4dcb4661a9e41e654a11ee81dbefa.setIcon(div_icon_51c38ea1e4a9f79dc82738c21f2a8c81);
+        
+    
+        var popup_413f7d24cf813c3612a5d018dd71f66d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9d3f7136e6d375cc4e233c5389758fe0 = $(`<div id="html_9d3f7136e6d375cc4e233c5389758fe0" style="width: 100.0%; height: 100.0%;">Kings Cross Station</div>`)[0];
+                popup_413f7d24cf813c3612a5d018dd71f66d.setContent(html_9d3f7136e6d375cc4e233c5389758fe0);
+            
+        
+
+        marker_f1d4dcb4661a9e41e654a11ee81dbefa.bindPopup(popup_413f7d24cf813c3612a5d018dd71f66d)
+        ;
+
+        
+    
+    
+                marker_f1d4dcb4661a9e41e654a11ee81dbefa.setIcon(div_icon_51c38ea1e4a9f79dc82738c21f2a8c81);
+            
+    
+            var marker_c978847aa9399958b2a1a342fa3a9dfd = L.marker(
+                [51.5111, -0.087],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_aa61813984a567329245aa995b46f34f = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_c978847aa9399958b2a1a342fa3a9dfd.setIcon(div_icon_aa61813984a567329245aa995b46f34f);
+        
+    
+        var popup_2a9c0ac4c74d4a92f881a6aba6e13c03 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3c9137dc1620366d3416b2579a2d517f = $(`<div id="html_3c9137dc1620366d3416b2579a2d517f" style="width: 100.0%; height: 100.0%;">Monument Station</div>`)[0];
+                popup_2a9c0ac4c74d4a92f881a6aba6e13c03.setContent(html_3c9137dc1620366d3416b2579a2d517f);
+            
+        
+
+        marker_c978847aa9399958b2a1a342fa3a9dfd.bindPopup(popup_2a9c0ac4c74d4a92f881a6aba6e13c03)
+        ;
+
+        
+    
+    
+                marker_c978847aa9399958b2a1a342fa3a9dfd.setIcon(div_icon_aa61813984a567329245aa995b46f34f);
+            
+    
+            var marker_5f57b7016d2ca1d8db2d1446261802cb = L.marker(
+                [51.5112, -0.113],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_fdcb9ce4516303e7981b93d9f5d9b3ee = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_5f57b7016d2ca1d8db2d1446261802cb.setIcon(div_icon_fdcb9ce4516303e7981b93d9f5d9b3ee);
+        
+    
+        var popup_efec4ca658376368be26b0d6247d0c4e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4d2d757e0b9b5f1f553eb68b2af4bbe0 = $(`<div id="html_4d2d757e0b9b5f1f553eb68b2af4bbe0" style="width: 100.0%; height: 100.0%;">Temple Station</div>`)[0];
+                popup_efec4ca658376368be26b0d6247d0c4e.setContent(html_4d2d757e0b9b5f1f553eb68b2af4bbe0);
+            
+        
+
+        marker_5f57b7016d2ca1d8db2d1446261802cb.bindPopup(popup_efec4ca658376368be26b0d6247d0c4e)
+        ;
+
+        
+    
+    
+                marker_5f57b7016d2ca1d8db2d1446261802cb.setIcon(div_icon_fdcb9ce4516303e7981b93d9f5d9b3ee);
+            
+    
+            var marker_1ba60ace2ecbc1c53d458f8f4d17767a = L.marker(
+                [51.5145, -0.098],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_235b957deb1abcf9fa0fd27dc73fbd7d = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_1ba60ace2ecbc1c53d458f8f4d17767a.setIcon(div_icon_235b957deb1abcf9fa0fd27dc73fbd7d);
+        
+    
+        var popup_369d54e10d8087d0c053ff836d818d4e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0e9c3cc829b92af6459c5573701ed124 = $(`<div id="html_0e9c3cc829b92af6459c5573701ed124" style="width: 100.0%; height: 100.0%;">St Paul's Station</div>`)[0];
+                popup_369d54e10d8087d0c053ff836d818d4e.setContent(html_0e9c3cc829b92af6459c5573701ed124);
+            
+        
+
+        marker_1ba60ace2ecbc1c53d458f8f4d17767a.bindPopup(popup_369d54e10d8087d0c053ff836d818d4e)
+        ;
+
+        
+    
+    
+                marker_1ba60ace2ecbc1c53d458f8f4d17767a.setIcon(div_icon_235b957deb1abcf9fa0fd27dc73fbd7d);
+            
+    
+            var marker_9338d5e2da9600290089f7242659c1ff = L.marker(
+                [51.5109, -0.1043],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_5547d04f7065b155b3caddd49ce49630 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_9338d5e2da9600290089f7242659c1ff.setIcon(div_icon_5547d04f7065b155b3caddd49ce49630);
+        
+    
+        var popup_410aec6670fb4d001edee6ee47d40edc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e7b0ffef12af3b49b74c48e68c2848cf = $(`<div id="html_e7b0ffef12af3b49b74c48e68c2848cf" style="width: 100.0%; height: 100.0%;">Blackfriars Station</div>`)[0];
+                popup_410aec6670fb4d001edee6ee47d40edc.setContent(html_e7b0ffef12af3b49b74c48e68c2848cf);
+            
+        
+
+        marker_9338d5e2da9600290089f7242659c1ff.bindPopup(popup_410aec6670fb4d001edee6ee47d40edc)
+        ;
+
+        
+    
+    
+                marker_9338d5e2da9600290089f7242659c1ff.setIcon(div_icon_5547d04f7065b155b3caddd49ce49630);
+            
+    
+            var marker_ba12351b0768aca92e0c192de6e1847d = L.marker(
+                [51.512, -0.0947],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_601f7d15d41aacd66a6f802d729bd7be = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_ba12351b0768aca92e0c192de6e1847d.setIcon(div_icon_601f7d15d41aacd66a6f802d729bd7be);
+        
+    
+        var popup_ad019a24f3bc24dffdfeec0c020bf5c2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5600edd783a2132cffabe759bb59f2be = $(`<div id="html_5600edd783a2132cffabe759bb59f2be" style="width: 100.0%; height: 100.0%;">Mansion House Station</div>`)[0];
+                popup_ad019a24f3bc24dffdfeec0c020bf5c2.setContent(html_5600edd783a2132cffabe759bb59f2be);
+            
+        
+
+        marker_ba12351b0768aca92e0c192de6e1847d.bindPopup(popup_ad019a24f3bc24dffdfeec0c020bf5c2)
+        ;
+
+        
+    
+    
+                marker_ba12351b0768aca92e0c192de6e1847d.setIcon(div_icon_601f7d15d41aacd66a6f802d729bd7be);
+            
+    
+            var marker_8a65b648ffd9b8af6c077cbfd9766265 = L.marker(
+                [51.5106, -0.0905],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_654eb890ff7758d94a00d530558484e1 = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_8a65b648ffd9b8af6c077cbfd9766265.setIcon(div_icon_654eb890ff7758d94a00d530558484e1);
+        
+    
+        var popup_7020c9b55ceb89d1806ff7e38ac5d0a2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_89a4ff4f0f25e4c7660d0a4bb7e209d4 = $(`<div id="html_89a4ff4f0f25e4c7660d0a4bb7e209d4" style="width: 100.0%; height: 100.0%;">Cannon Street Station</div>`)[0];
+                popup_7020c9b55ceb89d1806ff7e38ac5d0a2.setContent(html_89a4ff4f0f25e4c7660d0a4bb7e209d4);
+            
+        
+
+        marker_8a65b648ffd9b8af6c077cbfd9766265.bindPopup(popup_7020c9b55ceb89d1806ff7e38ac5d0a2)
+        ;
+
+        
+    
+    
+                marker_8a65b648ffd9b8af6c077cbfd9766265.setIcon(div_icon_654eb890ff7758d94a00d530558484e1);
+            
+    
+            var marker_321300509d2f15ecb70feb20f52d2efb = L.marker(
+                [51.5034, -0.105],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_12fba1ee212262090bd4f78c60cfcbcb = L.divIcon({
+  "html": " \n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_321300509d2f15ecb70feb20f52d2efb.setIcon(div_icon_12fba1ee212262090bd4f78c60cfcbcb);
+        
+    
+        var popup_01ec8398908c028c664344b23077efc2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8eeae6dfe78cd9c2fa7620e121988f19 = $(`<div id="html_8eeae6dfe78cd9c2fa7620e121988f19" style="width: 100.0%; height: 100.0%;">Southwark Station</div>`)[0];
+                popup_01ec8398908c028c664344b23077efc2.setContent(html_8eeae6dfe78cd9c2fa7620e121988f19);
+            
+        
+
+        marker_321300509d2f15ecb70feb20f52d2efb.bindPopup(popup_01ec8398908c028c664344b23077efc2)
+        ;
+
+        
+    
+    
+                marker_321300509d2f15ecb70feb20f52d2efb.setIcon(div_icon_12fba1ee212262090bd4f78c60cfcbcb);
+            
+    
+            var marker_e9a596c340d0709338bfc5044bb0c626 = L.marker(
+                [51.5045, -0.0861],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_631b0510d77142177d92dfb45aef6b6c = L.divIcon({
+  "html": "\n        \u003cdiv style=\"width:48px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/Underground_(no_text).svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n            \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n                 style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n        \u003c/div\u003e\n        ",
+  "className": "empty",
+});
+            marker_e9a596c340d0709338bfc5044bb0c626.setIcon(div_icon_631b0510d77142177d92dfb45aef6b6c);
+        
+    
+        var popup_83cc8aa25fc5f8199d6ff58cb7f05b58 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_11ba39f1b35fcb5d722f666c207a1fe6 = $(`<div id="html_11ba39f1b35fcb5d722f666c207a1fe6" style="width: 100.0%; height: 100.0%;">London Bridge Station</div>`)[0];
+                popup_83cc8aa25fc5f8199d6ff58cb7f05b58.setContent(html_11ba39f1b35fcb5d722f666c207a1fe6);
+            
+        
+
+        marker_e9a596c340d0709338bfc5044bb0c626.bindPopup(popup_83cc8aa25fc5f8199d6ff58cb7f05b58)
+        ;
+
+        
+    
+    
+                marker_e9a596c340d0709338bfc5044bb0c626.setIcon(div_icon_631b0510d77142177d92dfb45aef6b6c);
+            
+    
+            var marker_4ceb0ab3eecc12b4541df830bea50d96 = L.marker(
+                [51.5142, -0.1033],
+                {
+}
+            ).addTo(feature_group_fc721755a9a08a61574b59c6e8c63c9a);
+        
+    
+            var div_icon_3cd3c179ffe2bbd418219fe3a4f44c54 = L.divIcon({
+  "html": "\n\u003cdiv style=\"width:24px; height:24px; display: flex; align-items: center; justify-content: center;\"\u003e\n    \u003cimg src=\"https://raw.githubusercontent.com/HaseebInReal/MiQ/main/National_Rail_logo.svg\" \n         style=\"width:24px; height:24px; object-fit:contain;\" /\u003e\n\u003c/div\u003e\n",
+  "className": "empty",
+});
+            marker_4ceb0ab3eecc12b4541df830bea50d96.setIcon(div_icon_3cd3c179ffe2bbd418219fe3a4f44c54);
+        
+    
+        var popup_9128b792a0a499c3e71707652b71cc96 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a17942c2e47135f0042ecc4c09cb00bd = $(`<div id="html_a17942c2e47135f0042ecc4c09cb00bd" style="width: 100.0%; height: 100.0%;">City Thameslink Station</div>`)[0];
+                popup_9128b792a0a499c3e71707652b71cc96.setContent(html_a17942c2e47135f0042ecc4c09cb00bd);
+            
+        
+
+        marker_4ceb0ab3eecc12b4541df830bea50d96.bindPopup(popup_9128b792a0a499c3e71707652b71cc96)
+        ;
+
+        
+    
+    
+                marker_4ceb0ab3eecc12b4541df830bea50d96.setIcon(div_icon_3cd3c179ffe2bbd418219fe3a4f44c54);
+            
+    
+            feature_group_fc721755a9a08a61574b59c6e8c63c9a.addTo(map_374ab15d21194052c00eccade251a37d);
+        
+    
+            var layer_control_352aab18c7899b5a9fee9c08d7339215_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_44cd8551651980684b05a3bab9733b19,
+                },
+                overlays :  {
+                    "Clients" : feature_group_394dc3fb81b066de1add42f00a934a97,
+                    "Offices" : feature_group_9a9e9a6db2265c16e5f7e0875bb2ae59,
+                    "Amenities" : feature_group_5adffca57426c9ffb6f10668dee98590,
+                    "Stations" : feature_group_fc721755a9a08a61574b59c6e8c63c9a,
+                },
+            };
+            let layer_control_352aab18c7899b5a9fee9c08d7339215 = L.control.layers(
+                layer_control_352aab18c7899b5a9fee9c08d7339215_layers.base_layers,
+                layer_control_352aab18c7899b5a9fee9c08d7339215_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_374ab15d21194052c00eccade251a37d);
+
+        
+</script>
+</html>
